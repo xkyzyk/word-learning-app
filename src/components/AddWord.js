@@ -1,31 +1,33 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import _uniqueId from "lodash/uniqueId";
 
-export default class AddWord extends Component {
-  constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.state = {
-      word: "",
-      trigger: "",
-      definition: "",
-      id: 0,
-      known: false,
-      loading: false
-    };
-  }
+export default function AddWord({ handleSubmit }) {
+  const [word, setWord] = useState("");
+  const [loading, setLoading] = useState(false);
+  // constructor(props) {
+  //   super(props);
+  //   this.handleChange = this.handleChange.bind(this);
+  //   this.handleSubmit = this.handleSubmit.bind(this);
+  //   this.state = {
+  //     word: "",
+  //     trigger: "",
+  //     definition: "",
+  //     id: 0,
+  //     known: false,
+  //     loading: false
+  //   };
+  // }
 
-  handleChange = e => {
+  function handleChange(e) {
     const target = e.target;
     const name = target.name;
     const value = target.type === "checkbox" ? target.checked : target.value;
     this.setState({
       [name]: value
     });
-  };
+  }
 
-  handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
     this.setState({ loading: true });
     fetch(
@@ -47,39 +49,37 @@ export default class AddWord extends Component {
       });
   }
 
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <fieldset>
-          <legend>Add new word:</legend>
-          <input
-            required
-            name="word"
-            placeholder="word"
-            value={this.state.word}
-            onChange={this.handleChange}
-          />
-          <br></br>
-          <input
-            name="trigger"
-            placeholder="trigger"
-            value={this.state.trigger}
-            onChange={this.handleChange}
-          />
-          <br></br>
-          <input
-            name="known"
-            type="checkbox"
-            checked={this.state.known}
-            onChange={this.handleChange}
-          />
-          <label htmlFor="known">known</label>
-          <br></br>
-          <button onSubmit={this.handleSubmit}>
-            {this.state.loading === true ? "Loading" : "Submit"}
-          </button>
-        </fieldset>
-      </form>
-    );
-  }
+  return (
+    <form onSubmit={this.handleSubmit}>
+      <fieldset>
+        <legend>Add new word:</legend>
+        <input
+          required
+          name="word"
+          placeholder="word"
+          value={this.state.word}
+          onChange={this.handleChange}
+        />
+        <br></br>
+        <input
+          name="trigger"
+          placeholder="trigger"
+          value={this.state.trigger}
+          onChange={this.handleChange}
+        />
+        <br></br>
+        <input
+          name="known"
+          type="checkbox"
+          checked={this.state.known}
+          onChange={this.handleChange}
+        />
+        <label htmlFor="known">known</label>
+        <br></br>
+        <button onSubmit={this.addWord}>
+          {this.state.loading === true ? "Loading" : "Submit"}
+        </button>
+      </fieldset>
+    </form>
+  );
 }
