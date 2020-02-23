@@ -25,7 +25,7 @@ export default class AddWord extends Component {
     });
   };
 
-  handleSubmit(e) {
+  handleSubmit = e => {
     e.preventDefault();
     this.setState({ loading: true });
     fetch(
@@ -33,19 +33,23 @@ export default class AddWord extends Component {
     )
       .then(response => response.json())
       .then(data => {
-        if (data[0].meta.offensive === true)
-          this.setState({ word: "ur a naughty boi" });
-        this.setState({ definition: data[0].shortdef, id: _uniqueId() });
-        this.props.addWord(this.state);
-        this.setState({
-          word: "",
-          trigger: "",
-          definition: "",
-          known: false,
-          loading: false
-        });
-      });
-  }
+        if (typeof data[0] === "object") {
+          if (data[0].meta && data[0].meta.offensive === true) {
+            this.setState({ word: "ur a naughty boi" });
+          }
+          this.setState({ definition: data[0].shortdef, id: _uniqueId() });
+          this.props.addWord(this.state);
+          this.setState({
+            word: "",
+            trigger: "",
+            definition: "",
+            known: false,
+            loading: false
+          });
+        } else if (typeof data[0] === "string") console.log("Word not found"); //offer suggestions
+      })
+      .catch(err => console.log(err));
+  };
 
   render() {
     return (
