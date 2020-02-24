@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import AddWord from "./components/AddWord";
 import LearningList from "./components/LearningList";
 import KnownList from "./components/KnownList";
+import _uniqueId from "lodash/uniqueId";
+import { apiKey } from "./api-key";
 
 export default class App extends Component {
   constructor() {
@@ -12,8 +14,28 @@ export default class App extends Component {
     this.state = { words: [] };
   }
 
-  onSubmit(word) {
-    this.setState({ words: [...this.state.words, word] });
+  // const [error, setError] = useState(null);
+
+  async onSubmit(word) {
+    try {
+      const url = `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${word.word}?key=${apiKey}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      const definitions = data[0].shortdef;
+      if (typeof data[0] === "object") {
+        if (data[0].meta && data[0].meta.offensive === true) {
+          word.word = "ur a naughty boi";
+        }
+        word.definitions = definitions;
+        word.id = _uniqueId();
+      } else if (typeof data[0] === "string") {
+        console.log("Word not found");
+      } //offer suggestions
+    } catch (err) {
+      console.log(err);
+    } finally {
+      this.setState({ words: [...this.state.words, word] });
+    }
   }
 
   onDelete(id) {
