@@ -13,9 +13,9 @@ export default function LearningList({
         <div key={id}>
           {word.word}
           {word.trigger && <span>|{word.trigger}</span>}
-          {word.definition && (
+          {word.definitions && (
             <span>
-              {word.definition.map((def, i) => (
+              {word.definitions.map((def, i) => (
                 <span key={id + i}>
                   |{i + 1}. {def}
                 </span>

@@ -13,8 +13,7 @@ export default class App extends Component {
   }
 
   onSubmit(word) {
-    const words = [...this.state.words, word];
-    this.setState({ words: words });
+    this.setState({ words: [...this.state.words, word] });
   }
 
   onDelete(id) {
