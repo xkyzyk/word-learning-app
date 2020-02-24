@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import _uniqueId from "lodash/uniqueId";
-import { apiKey } from "./api-key";
+import { apiKey } from "../api-key";
 
 export default function AddWord({ addWord }) {
   const [word, setWord] = useState({
