@@ -1,10 +1,20 @@
 import React, { useState } from "react";
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  Stack,
+  Input,
+  Checkbox,
+  Divider,
+  Button,
+  FormHelperText
+} from "@chakra-ui/core";
 
-export default function AddWord({ addWord }) {
+export default function AddWord({ addWord, error }) {
   const [word, setWord] = useState({
     word: "",
     trigger: "",
-    id: 0,
     known: false
   });
 
@@ -34,34 +44,53 @@ export default function AddWord({ addWord }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <fieldset>
-        <legend>Add new word:</legend>
-        <input
-          required
-          name="word"
-          placeholder="word"
-          value={word.word}
-          onChange={handleChange}
-        />
-        <br></br>
-        <input
-          name="trigger"
-          placeholder="trigger"
-          value={word.trigger}
-          onChange={handleChange}
-        />
-        <br></br>
-        <input
-          name="known"
-          type="checkbox"
-          checked={word.known}
-          onChange={handleChange}
-        />
-        <label htmlFor="known">known</label>
-        <br></br>
-        <button type="submit">{loading === true ? "Loading" : "Submit"}</button>
-      </fieldset>
-    </form>
+    <Box
+      margin="20px"
+      maxW="2xl"
+      align="center"
+      bg="teal.200"
+      w="440px"
+      p={4}
+      rounded="lg"
+    >
+      <FormControl as="fieldset" onSubmit={handleSubmit}>
+        <FormLabel as="legend">Add new word:</FormLabel>
+        <Stack spacing={3}>
+          <Input
+            isRequired
+            variant="unstyled"
+            name="word"
+            placeholder="word"
+            value={word.word}
+            onChange={handleChange}
+          />
+          <Input
+            variant="unstyled"
+            name="trigger"
+            placeholder="trigger"
+            value={word.trigger}
+            onChange={handleChange}
+          />
+          <Checkbox
+            variantColor="green"
+            name="known"
+            checked={word.known}
+            onChange={handleChange}
+          >
+            known
+          </Checkbox>{" "}
+          />
+        </Stack>
+        <Divider />
+        {loading === true ? (
+          <Button isLoading />
+        ) : (
+          <Button type="submit" onClick={handleSubmit}>
+            Learn!
+          </Button>
+        )}
+        <FormHelperText>{error}</FormHelperText>
+      </FormControl>
+    </Box>
   );
 }
