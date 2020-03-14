@@ -26,5 +26,5 @@ export default function KnownList({ words, handleDelete, handleStatusChange }) {
       );
     });
 
-  return <div>Known{wordList}</div>;
+  return wordList.length > 0 && <div>Known{wordList}}</div>;
 }

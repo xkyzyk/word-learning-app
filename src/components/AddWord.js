@@ -1,30 +1,36 @@
-import React, { Component } from "react";
-import _uniqueId from "lodash/uniqueId";
+import React, { useState } from "react";
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  Stack,
+  Input,
+  Checkbox,
+  Divider,
+  Button,
+  FormHelperText
+} from "@chakra-ui/core";
 
-export default class AddWord extends Component {
-  constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.state = {
-      word: "",
-      trigger: "",
-      definition: "",
-      id: 0,
-      known: false,
-      loading: false
-    };
-  }
+export default function AddWord({ addWord, error }) {
+  const [word, setWord] = useState({
+    word: "",
+    trigger: "",
+    known: false
+  });
 
-  handleChange = e => {
-    const target = e.target;
-    const name = target.name;
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = e => {
+    const { target } = e;
+    const { name } = target;
     const value = target.type === "checkbox" ? target.checked : target.value;
-    this.setState({
+    setWord({
+      ...word,
       [name]: value
     });
   };
 
+<<<<<<< HEAD
   handleSubmit = e => {
     e.preventDefault();
     this.setState({ loading: true });
@@ -49,41 +55,69 @@ export default class AddWord extends Component {
         } else if (typeof data[0] === "string") console.log("Word not found"); //offer suggestions
       })
       .catch(err => console.log(err));
+=======
+  const handleSubmit = async e => {
+    e.preventDefault();
+    setLoading(true);
+    await addWord(word);
+    setLoading(false);
+    setWord({
+      ...word,
+      word: "",
+      trigger: "",
+      known: false
+    });
+>>>>>>> refactor-main-state
   };
 
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <fieldset>
-          <legend>Add new word:</legend>
-          <input
-            required
+  return (
+    <Box
+      margin="20px"
+      maxW="2xl"
+      align="center"
+      bg="teal.200"
+      w="440px"
+      p={4}
+      rounded="lg"
+    >
+      <FormControl as="fieldset" onSubmit={handleSubmit}>
+        <FormLabel as="legend">Add new word:</FormLabel>
+        <Stack spacing={3}>
+          <Input
+            isRequired
+            variant="unstyled"
             name="word"
             placeholder="word"
-            value={this.state.word}
-            onChange={this.handleChange}
+            value={word.word}
+            onChange={handleChange}
           />
-          <br></br>
-          <input
+          <Input
+            variant="unstyled"
             name="trigger"
             placeholder="trigger"
-            value={this.state.trigger}
-            onChange={this.handleChange}
+            value={word.trigger}
+            onChange={handleChange}
           />
-          <br></br>
-          <input
+          <Checkbox
+            variantColor="green"
             name="known"
-            type="checkbox"
-            checked={this.state.known}
-            onChange={this.handleChange}
+            checked={word.known}
+            onChange={handleChange}
+          >
+            known
+          </Checkbox>{" "}
           />
-          <label htmlFor="known">known</label>
-          <br></br>
-          <button onSubmit={this.handleSubmit}>
-            {this.state.loading === true ? "Loading" : "Submit"}
-          </button>
-        </fieldset>
-      </form>
-    );
-  }
+        </Stack>
+        <Divider />
+        {loading === true ? (
+          <Button isLoading />
+        ) : (
+          <Button type="submit" onClick={handleSubmit}>
+            Learn!
+          </Button>
+        )}
+        <FormHelperText>{error}</FormHelperText>
+      </FormControl>
+    </Box>
+  );
 }
